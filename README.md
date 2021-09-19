@@ -1,4 +1,4 @@
-# Deep Reinforcement Learning Robot Advisor
+# Deep Reinforcement Learning Robot Advisor for Portfolio Management
 This project aims at developing a robot advisor to grow wealth with ETF investment through continuous learning and rational decision-making. As an ordinary employee without a large amount of assets and professional investment knowledge, I hope it helps manage my portfolio on its own. Modern Portfolio Theory which some robot advisor providers adopt has limitations in real life application. For example the assumptions that normally distributed asset returns, same information available to all investors or investors holding same view of expected return, are not true in the complex reality. It is an attempt to let the robot advisor learn itself by reinforcement learning. It takes advantage of reinforcement learning model which makes consistent decision in order to optimize the target, the total return or final portfolio value, by observing and learning gradually from real word situation with minimal predefined assumptions.
 
 ## Result and Discussion
