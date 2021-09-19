@@ -15,7 +15,7 @@ Back-test Period: From 2015-01-02 to	2020-12-31
 **Alpha** |	0.02
 **Beta** |	1.05
 
-In back-testing, the portfolio value grows 2.3 times in 6 years with annual return 15% and volatility 21%, which perfromed slightly better than the benchmark index (SPY) but also riskier. The sharpe ratio is 0.77 on average but it fluctuated from -2 to 4 during the back-test period. It performed the best in 2017 and 2018 and fluctuates in 2019. Though experiencing a large drop in 2020, it recovered faster than the benchmark and had the largest growth afterwards. The aims is to grow wealth  through continuous learning and rational decision-making so looking at the allocation along the time shows more about how it made decisions.
+In back-testing, the portfolio value grows 2.3 times in 6 years with annual return 15% and volatility 21%, which performed  slightly better than the benchmark index (SPY) but also riskier. The Sharpe ratio is 0.77 on average but it fluctuated from -2 to 4 during the back-test period. It performed the best in 2017 and 2018 and fluctuates in 2019. Though experiencing a large drop in 2020, it recovered faster than the benchmark and had the largest growth afterwards. The aims is to grow wealth  through continuous learning and rational decision-making so looking at the allocation along the time shows more about how it made decisions.
 
 ![alt text][cumula_ret]
 ![alt text][pyfolio_tear_sheet_rolling]
