@@ -33,7 +33,29 @@ The neural network structure is different from the papers. The feature maps are 
 ![alt text][nn_structure]
 
 ## Result and Discussion
+### Portfolio Performance Summary
 
+Back-test Period: From 2015-01-02 to	2020-12-31
+
+&nbsp; | Details 
+--- | --- 
+**Annual return** | 15.162%
+**Cumulative returns** | 133.133%
+**Annual volatility** | 21.313%
+**Sharpe ratio** |	0.77
+**Alpha** |	0.02
+**Beta** |	1.05
+
+![alt text][cumula_ret]
+In back-testing, the portfolio value grows 2.3 times in 6 years with annual return 15% and volatility 21%, which perfromed slightly better than the benchmark index (SPY) but also riskier. The sharpe ratio is 0.77 on average but it fluctuated from -2 to 4 during the back-test period. It performed the best in 2017 and 2018 and fluctuates in 2019. Though experiencing a large drop in 2020, it recovered faster than the benchmark and had the largest growth afterwards. The aims is to grow wealth  through continuous learning and rational decision-making so looking at the allocation along the time shows more about how it made decisions.
+
+### Portfolio Asset Allocation
+![alt text][port_weights]
+
+![alt text][month_ret_vs_port_maj_weight]
+
+### Portfolio Performance Details
+More details can be found in [Pyfolio generated tear sheet](https://github.com/kftam1994/Robo_Advisor/blob/main/images/pyfolio_tear_sheet.png)
 
 ## Data and Features
 I.	Stock Data
@@ -136,8 +158,10 @@ Z. Jiang, D. Xu, and J. Liang, “A deep reinforcement learning framework for th
 
 Z. Liang, H. Chen, J. Zhu, K. Jiang, and Y. Li, “Adversarial Deep Reinforcement Learning in Portfolio Management,” arXiv, arXiv:1808.09940, 2018.
 
+## License
+License is following Zheng's [Github](https://github.com/ZhengyaoJiang/PGPortfolio) as some codes are re-written based on his.
 
 [nn_structure]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/neural_network_structure.png "neural network structure"
 [month_ret_vs_port_maj_weight]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/month_ret_vs_port_maj_weight.png "monthly return vs portfolio major weights"
 [port_weights]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/port_weights.png "portfolio weights"
-[pyfolio_tear_sheet]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/pyfolio_tear_sheet.png "portfolio tear sheet"
+[cumula_ret]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/cumula_ret.JPG "portfolio cumulative return"
