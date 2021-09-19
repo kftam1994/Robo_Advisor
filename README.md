@@ -1,5 +1,39 @@
 # Deep Reinforcement Learning Robot Advisor
 This project aims at developing a robot advisor to grow wealth with ETF investment through continuous learning and rational decision-making. As an ordinary employee without a large amount of assets and professional investment knowledge, I hope it helps manage my portfolio on its own. Modern Portfolio Theory which some robot advisor providers adopt has limitations in real life application. For example the assumptions that normally distributed asset returns, same information available to all investors or investors holding same view of expected return, are not true in the complex reality. It is an attempt to let the robot advisor learn itself by reinforcement learning. It takes advantage of reinforcement learning model which makes consistent decision in order to optimize the target, the total return or final portfolio value, by observing and learning gradually from real word situation with minimal predefined assumptions.
+
+## Result and Discussion
+### Portfolio Performance Summary
+
+Back-test Period: From 2015-01-02 to	2020-12-31
+
+&nbsp; | Details 
+--- | --- 
+**Annual return** | 15.162%
+**Cumulative returns** | 133.133%
+**Annual volatility** | 21.313%
+**Sharpe ratio** |	0.77
+**Alpha** |	0.02
+**Beta** |	1.05
+
+In back-testing, the portfolio value grows 2.3 times in 6 years with annual return 15% and volatility 21%, which perfromed slightly better than the benchmark index (SPY) but also riskier. The sharpe ratio is 0.77 on average but it fluctuated from -2 to 4 during the back-test period. It performed the best in 2017 and 2018 and fluctuates in 2019. Though experiencing a large drop in 2020, it recovered faster than the benchmark and had the largest growth afterwards. The aims is to grow wealth  through continuous learning and rational decision-making so looking at the allocation along the time shows more about how it made decisions.
+
+![alt text][cumula_ret]
+![alt text][pyfolio_tear_sheet_rolling]
+
+### Portfolio's Allocation
+The model chose different composition of ETF after observing different portfolio performance to cater for the market condition.
+During the back-test period, XLK and XLB are the major ETF chosen and occupied a large proportion of allocation. The model chose XLK more during positive return and stable period and mix of XLK and XLB during fluctuating period. Before 2017, similar weights were assigned to XLK (brown line) and XLB (green line) but it changed to more weights to XLK during 2017 and 2018, which enables a larger growth in 2017 and most of months in 2018 until the drop in late 2018. In 2019, there were a mix of XLK and XLB while in 2020, XLK dominates again. The model may seek to capture the growth by XLK. It also tries to maintain a mix of XLK and XLB to avoid negative return though it seems not working well.
+Similar situation also happened for the proportion of others ETF compared to XLK and XLB (orange line). Sometimes other ETF were also chose though with a significantly smaller proportion. When the orange line is not close to 1.0, other ETF were chosen apart from XLK and XLB. It happened in 2016 and 2019. In 2016 and 2019, during the fluctuating period and negative return, other ETF were chosen for some times. The model may seek a flat performance during volatile period.
+
+![alt text][port_weights]
+
+![alt text][month_ret_vs_port_maj_weight]
+
+Further analysis is needed, such as integrated gradients, to interpret the model and understand which features lead to each decision and which factors the model focus on. More types of ETF or even other asset classes could be added to increase the variety of the portfolio.
+
+### Portfolio Performance Details
+More details can be found in [Pyfolio generated tear sheet](https://github.com/kftam1994/Robo_Advisor/blob/main/images/pyfolio_tear_sheet.png)
+
 ## Methodology
 Referencing to two papers, A Deep Reinforcement Learning Framework for the Financial Portfolio Management Problem ([arXiv:1706.10059](https://arxiv.org/abs/1706.10059) and [Github](https://github.com/ZhengyaoJiang/PGPortfolio)) and Adversarial Deep Reinforcement Learning in Portfolio Management ([arXiv:1808.09940](https://arxiv.org/abs/1808.09940) and [Github](https://github.com/liangzp/Reinforcement-learning-in-portfolio-management-)), this project applies the following methodologies to manage a portfolio of ETF investment.
 
@@ -32,30 +66,6 @@ During backtesting, roll training is implemented after each new day of observati
 The neural network structure is different from the papers. The feature maps are increased and then reduced, compared to reduction and then increase in the paper, to firstly generate variety of interpretation for each different feature and then summarized the knowledge. Batch normalization is added to increase stability of training. A fully connected layer is added before softmax function to learn the relationship between cash and portfolio assets before outputting prediction of weights.
 ![alt text][nn_structure]
 
-## Result and Discussion
-### Portfolio Performance Summary
-
-Back-test Period: From 2015-01-02 to	2020-12-31
-
-&nbsp; | Details 
---- | --- 
-**Annual return** | 15.162%
-**Cumulative returns** | 133.133%
-**Annual volatility** | 21.313%
-**Sharpe ratio** |	0.77
-**Alpha** |	0.02
-**Beta** |	1.05
-
-![alt text][cumula_ret]
-In back-testing, the portfolio value grows 2.3 times in 6 years with annual return 15% and volatility 21%, which perfromed slightly better than the benchmark index (SPY) but also riskier. The sharpe ratio is 0.77 on average but it fluctuated from -2 to 4 during the back-test period. It performed the best in 2017 and 2018 and fluctuates in 2019. Though experiencing a large drop in 2020, it recovered faster than the benchmark and had the largest growth afterwards. The aims is to grow wealth  through continuous learning and rational decision-making so looking at the allocation along the time shows more about how it made decisions.
-
-### Portfolio Asset Allocation
-![alt text][port_weights]
-
-![alt text][month_ret_vs_port_maj_weight]
-
-### Portfolio Performance Details
-More details can be found in [Pyfolio generated tear sheet](https://github.com/kftam1994/Robo_Advisor/blob/main/images/pyfolio_tear_sheet.png)
 
 ## Data and Features
 I.	Stock Data
@@ -164,4 +174,5 @@ License is following Zheng's [Github](https://github.com/ZhengyaoJiang/PGPortfol
 [nn_structure]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/neural_network_structure.png "neural network structure"
 [month_ret_vs_port_maj_weight]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/month_ret_vs_port_maj_weight.png "monthly return vs portfolio major weights"
 [port_weights]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/port_weights.png "portfolio weights"
-[cumula_ret]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/cumula_ret.JPG "portfolio cumulative return"
+[cumula_ret]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/cumula_ret.png "portfolio cumulative return"
+[pyfolio_tear_sheet_rolling]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/pyfolio_tear_sheet_rolling.png "rolling volatility & sharpe"
