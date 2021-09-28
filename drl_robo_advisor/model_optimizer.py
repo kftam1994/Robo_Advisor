@@ -93,7 +93,7 @@ class ModelOptimizer:
 
         """
 
-        from RL.Final.agent import Agent
+        from drl_robo_advisor.agent import Agent
         def objective(trial):
             batch_size = trial.suggest_categorical('batch_size',
                                                    config_settings.optimize_hyperparameters['batch_sizes'])

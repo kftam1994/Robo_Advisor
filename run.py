@@ -172,6 +172,8 @@ def run_back_testing(test_start, test_end,training_data_batch,zipline_data_handl
     zipline_backtest_handler.plot_back_test_result(suffix=logging_handler.logger_filename_suffix)
     plot_dist(advisor.model_root_path, advisor.portfolio_trainer.predict_save_indexs, advisor.mode + '_rolltrain')
 
+    advisor.portfolio_trainer.plot_Integrate_Gradient(config_settings.asset_symbols)
+
     logger.info(f'----------End Testing----------')
 
 def main():
@@ -200,11 +202,11 @@ def main():
         data_preparation(config_settings,logger)
 
     if args.train==True or args.opt_train==True or args.back_test==True:
-        zipline_data_handler = ZiplineDataHandler(config_settings=config_settings,
+        train_start, train_end = construct_training_dates(config_settings, logger)
+        zipline_data_handler = ZiplineDataHandler(train_start,train_end,config_settings=config_settings,
                                                           logger=logger)
 
         config_settings.asset_symbols = zipline_data_handler.asset_symbols
-        train_start, train_end = construct_training_dates(config_settings, logger)
         training_data_batch = zipline_data_handler.get_data_batch(train_start, train_end)
 
         if args.train==True:

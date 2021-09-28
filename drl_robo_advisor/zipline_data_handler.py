@@ -32,8 +32,8 @@ class CustomData(DataSet):
     EMA_200 = Column(dtype=float)
     RSI_14 = Column(dtype=float)
     ATR_14 = Column(dtype=float)
-    MACD = Column(dtype=float)
-    ADL = Column(dtype=float)
+    # MACD = Column(dtype=float)
+    # ADL = Column(dtype=float)
 
     DGS1MO = Column(dtype=float)
     DGS3MO = Column(dtype=float)
@@ -85,11 +85,15 @@ class ZiplineDataHandler:
     read_FREDData(sids, macro_indicator, data_folder_path)
 
     """
-    def __init__(self,config_settings,logger):
+    def __init__(self,start_training_date,end_training_date,config_settings,logger):
         """
 
         Parameters
         ----------
+        start_training_date : pandas.Timestamp
+            Specify the start training date for min-max scaler fitting
+        end_training_date : pandas.Timestamp
+            Specify the end training date for min-max scaler fitting
         config_settings : ConfigSetter
             Configuration reference to config.json
         logger : Logger
@@ -108,6 +112,8 @@ class ZiplineDataHandler:
                                  equity_daily_reader=self._bundle_data.equity_daily_bar_reader)
         self._macroecon_features = config_settings.macroecon_features
         self._stock_specific_feautres = config_settings.stock_specific_feautres
+        self._start_training_date = start_training_date
+        self._end_training_date = end_training_date
         self._data_folder_path = config_settings.data_folder_path
         self._logger = logger
 
@@ -334,7 +340,6 @@ class ZiplineDataHandler:
             A dictionary of data batch  with each feature as key and value as the dataframe of historical data
 
         """
-
         self._get_historical_data(start_ts,end_ts)
         data_batch = {}
         for f in self._feature_names:
@@ -360,16 +365,13 @@ class ZiplineDataHandler:
         custom_data_loaders = {}
         for data_field in data_fields:
             if data_field in self._stock_specific_feautres:
-                fundam_data_daily = self.read_other_stock_specific_data(self._asset_names, self._assets_sids, data_field,
-                                                                self._data_folder_path)
+                fundam_data_daily = self.read_other_stock_specific_data(self._asset_names, self._assets_sids, data_field,self._data_folder_path)
                 custom_data_loaders[eval(f'CustomData.{data_field}')] = DataFrameLoader(eval(f'CustomData.{data_field}'), fundam_data_daily)
-                self._logger.debug('fundamental data custom data loader complete')
+                self._logger.debug(f'fundamental data custom data loader for {data_field} complete')
             elif data_field in self._macroecon_features:
-                macroecon_data_daily = self.read_FREDData(self._assets_sids, data_field,
-                                                                self._data_folder_path)
-
+                macroecon_data_daily = self.read_FREDData(self._assets_sids, data_field,self._data_folder_path)
                 custom_data_loaders[eval(f'CustomData.{data_field}')] = DataFrameLoader(eval(f'CustomData.{data_field}'),macroecon_data_daily)
-                self._logger.debug('macroecon data custom data loader complete')
+                self._logger.debug(f'macroecon data custom data loader for {data_field} complete')
 
         return custom_data_loaders
 
@@ -413,7 +415,7 @@ class ZiplineDataHandler:
         other_stock_specific_data_daily = pd.DataFrame()
         for asset_name, sid in zip(asset_names, sids):
             output_file_path = Path(data_folder_path, f'{asset_name}.csv')
-            other_stock_specific_data_daily_asset_all = pd.read_csv(output_file_path, index_col=0, parse_dates=True)[stock_specific_field]
+            other_stock_specific_data_daily_asset_all = pd.read_csv(output_file_path, index_col=0, parse_dates=True).loc[self._start_training_date:self._end_training_date,stock_specific_field]
             #self._logger.debug(f'stock data loaded from {output_file_path}')
             minmaxscaler = create_or_load_minmaxscaler(f'{stock_specific_field}_{asset_name}',other_stock_specific_data_daily_asset_all,data_folder_path,self._logger)
 
@@ -509,7 +511,7 @@ class ZiplineDataHandler:
         else:
             try:
                 # !! zipline's equity_pricing_loader.py load_adjusted_array() will shift allquery dates back by a trading session so the start date is offset 1
-                macroecon_data_all = pdr.fred.FredReader(macro_indicator, start=pd.Timestamp(self._start_date)- pd.DateOffset(1),end=pd.Timestamp(self._end_date)).read()
+                macroecon_data_all = pdr.fred.FredReader(macro_indicator, start=pd.Timestamp(self._start_training_date)- pd.DateOffset(1),end=pd.Timestamp(self._end_training_date)).read()
                 macroecon_data_all.to_csv(output_file_path)
                 #self._logger.debug(f'macroecon data saved to {output_file_path}')
             except Exception as e:

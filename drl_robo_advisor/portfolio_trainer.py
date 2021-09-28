@@ -5,6 +5,9 @@ from tqdm import tqdm
 import numpy as np
 import time
 from drl_robo_advisor.utils import plot_dist
+from captum.attr import IntegratedGradients
+import matplotlib.pyplot as plt
+from pathlib import Path
 
 torch.autograd.set_detect_anomaly(True)
 
@@ -79,6 +82,7 @@ class PortfolioTrainer:
 
         self._y_t_1 = None
         self.predict_save_indexs = np.array([])
+        self.IG_output_all_frames = []
 
     @property
     def agent(self):
@@ -622,7 +626,8 @@ class PortfolioTrainer:
 
         batches[0] = batches[0]._replace(last_w=self._agent.last_trade_w[1:])
         X, y_t, last_w = self._create_input_set(batches)
-        self._predict_by_network(x=X, last_w=last_w,cur_time=cur_time)
+        IG_output = self._predict_by_network(x=X, last_w=last_w,cur_time=cur_time)
+        self.IG_output_all_frames.append(IG_output)
         w = self._network_output.cpu().detach().numpy()
 
         self._logger.info(f'predict asset weight of time {cur_time}: {w}')
@@ -658,6 +663,8 @@ class PortfolioTrainer:
             self._write_predict_performance_to_summary(w_assets,cur_time)
 
         self._training_steps = self._predict_rolltrain_steps
+
+        self._logger.debug(f'start roll train at time step {cur_time}')
         save_indexs,_ = self.train(write_to_summary=False,plot_dist_indexs=False,save_model=True,do_validation=False,desc_tqdm="Roll Training Steps")
         self.predict_save_indexs = np.concatenate((self.predict_save_indexs, save_indexs)) if self.predict_save_indexs.size else save_indexs
         self._predict_writer.flush()
@@ -669,3 +676,11 @@ class PortfolioTrainer:
         self._x = torch.tensor(x, dtype=torch.float32).to(self._device)
         self._last_w = torch.tensor(last_w, requires_grad=False, dtype=torch.float32).to(self._device)
         self._network_output = self._network(self._x, self._last_w)
+
+        ig = IntegratedGradients(self._network)
+        attribution = ig.attribute(inputs=(self._x, self._last_w),
+                                   target=list(range(self._network_output.shape[0])))
+
+        IG_output = attribution[0].detach().numpy()[0]
+
+        return IG_output

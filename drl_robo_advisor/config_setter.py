@@ -90,6 +90,8 @@ class ConfigSetter:
 
         self.optimize_tuning_max_eval = config_json['OPTIMIZE_TUNING_MAX_EVAL']
 
+        self.asset_symbols = None
+
     def set_hyperparameters(self,hyperparameters):
         """
 
