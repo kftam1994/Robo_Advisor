@@ -64,6 +64,20 @@ class ModelOptimizer:
 
         Set the objective function for optuna's optimization run
 
+        It will conduct a rolling window cross validation.
+        The training window is increasing and starts from number of years before fold to number of years before fold + number of years per fold * number of folds. Each fold increases by number of years per fold.
+        The validation window is fixed as the out-of-sample number of years per fold
+
+        For example:
+        number of years before fold: 5 years
+        number of years per fold: 1 year
+        number of folds: 5
+        For 1st fold: 5 years of training set and 1 year of validation set
+        For 2nd fold: 5+1*1 years of training set and 1 year of validation set
+        For 3rd fold: 5+1*2 years of training set and 1 year of validation set
+        ...
+        For 5th fold: 5+1*4 years of training set and 1 year of validation set
+
         The following hyperparameters are tuned:
 
         Categorical search:
@@ -139,14 +153,14 @@ class ModelOptimizer:
 
             for fold in tqdm(range(1, config_settings.num_folds + 1),
                              desc=f"Optimization Fold of trial {trial.number}"):
-                logger.debug(f'-----Start Fold {fold}-----')
-                train_end_fold = config_settings.initial_start_date + pd.offsets.DateOffset(
+                train_to_valid_end = config_settings.initial_start_date + pd.offsets.DateOffset(
                     years=config_settings.num_years_before_fold) + pd.offsets.DateOffset(
-                    years=config_settings.num_years_per_fold * config_settings.num_folds)
+                    years=config_settings.num_years_per_fold * fold)
                 valid_split_portion = config_settings.num_years_per_fold / (
-                        config_settings.num_years_before_fold + config_settings.num_years_per_fold * config_settings.num_folds)
+                        config_settings.num_years_before_fold + config_settings.num_years_per_fold * fold)
+                logger.debug(f'-----Start Fold {fold} from {train_start} to {train_to_valid_end}-----')
                 training_data_batch_fold = dict(
-                    (k, v.loc[train_start:train_end_fold]) for k, v in training_data_batch.items())
+                    (k, v.loc[train_start:train_to_valid_end]) for k, v in training_data_batch.items())
                 config_settings.valid_portion = valid_split_portion
                 advisor = Agent(observed_price_feature_history=training_data_batch_fold, config_settings=config_settings,
                                 logger=logger,load_network=False)

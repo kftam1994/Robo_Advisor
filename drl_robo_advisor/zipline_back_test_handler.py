@@ -66,7 +66,7 @@ class ZiplineBacktestHandler:
             context.logger = logger
             context.assets = symbols(*config_settings.stock_tickers)
             context.asset_names = config_settings.stock_tickers
-            context.time = 1
+            context.time_step = 1
             context.agent = agent
             context.steps = config_settings.predict_rolltrain_steps
             context.benchmark_asset_name = config_settings.benchmark_stock_ticker
@@ -120,8 +120,8 @@ class ZiplineBacktestHandler:
 
         def handle_data_test(context, data):
             order_weights = []
-            print('current time: ', context.time)
-            context.logger.info(f'current time: {context.time}')
+            print('current time_step: ', context.time_step)
+            context.logger.info(f'current time_step: {context.time_step}')
             print('current datetime: ', data.current_dt)
             context.logger.info(f'current datetime: {data.current_dt}')
 
@@ -131,7 +131,7 @@ class ZiplineBacktestHandler:
                 prices = prices.set_index([pd.Index([context.blotter.current_dt])])
                 context.agent.read_new_data(asset, prices)
             context.agent.consol_new_data()
-            ordering_weights = context.agent.predict(context.time)
+            ordering_weights = context.agent.predict(context.time_step,data.current_dt)
 
             for idx, asset in enumerate(context.assets):
                 if data.can_trade(asset) :
@@ -141,7 +141,7 @@ class ZiplineBacktestHandler:
                         context.logger.debug(f"Target asset value for {asset.symbol}: {target_asset_value}")
                         context.logger.debug(f"Order number of shares for {asset.symbol}: {number_of_shares_to_order}")
                         order(asset, number_of_shares_to_order)
-            context.time += 1
+            context.time_step += 1
 
         self._handle_data_test = handle_data_test
 

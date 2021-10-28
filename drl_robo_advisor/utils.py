@@ -98,3 +98,24 @@ def export_df_to_csv(df,output_path):
 
     """
     df.to_csv(output_path, header=True,index=False, sep='|')
+
+def merge_list_in_dict(original_dict,new_dict):
+    """
+
+    To merge a new dictioanry of list to the original dictioanry of list so that the list in the original dictioanry with respect to each key is appended the list of same key from the new dictioanry
+
+    Reference: https://stackoverflow.com/questions/33931259/to-merge-two-dictionaries-of-list-in-python
+
+    Parameters
+    ----------
+    main_dict : dict
+    new_dict : dict
+
+    Returns
+    -------
+    merged_dict : dict
+
+    """
+    merged_dict = {key: original_dict.get(key, []) + new_dict.get(key, []) for key in set(list(original_dict.keys()) + list(new_dict.keys()))}
+    return merged_dict
+ 

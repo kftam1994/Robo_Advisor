@@ -172,7 +172,7 @@ def run_back_testing(test_start, test_end,training_data_batch,zipline_data_handl
     zipline_backtest_handler.plot_back_test_result(suffix=logging_handler.logger_filename_suffix)
     plot_dist(advisor.model_root_path, advisor.portfolio_trainer.predict_save_indexs, advisor.mode + '_rolltrain')
 
-    advisor.portfolio_trainer.plot_Integrate_Gradient(config_settings.asset_symbols)
+    advisor.portfolio_trainer.plot_integrate_gradient()
 
     logger.info(f'----------End Testing----------')
 

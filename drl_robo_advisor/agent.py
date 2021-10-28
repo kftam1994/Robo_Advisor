@@ -424,7 +424,7 @@ class Agent:
         else:
             self._logger.error('Not enough training data')
 
-    def predict(self,cur_time):
+    def predict(self,cur_time_step,current_datetime):
         """
 
         Wait until enough observation, at least one batch of data, and then start predicting by the trained model
@@ -432,8 +432,10 @@ class Agent:
 
         Parameters
         ----------
-        cur_time : int
+        cur_time_step : int
             The current time step of prediction
+        current_datetime : datetime
+            The current datetime of prediction
 
         Returns
         -------
@@ -441,7 +443,7 @@ class Agent:
 
         """
         if self._experience_batch.check_if_enough_data(self._original_history_size)==True:
-            predicted_assets_weights = self._portfolio_trainer.predict(self._experience_batch, self._portfolio_vector_memory, cur_time)
+            predicted_assets_weights = self._portfolio_trainer.predict(self._experience_batch, self._portfolio_vector_memory, cur_time_step,current_datetime)
             return predicted_assets_weights
         else:
             self._portfolio_trainer.portfolio_vector_memory = self._portfolio_vector_memory
