@@ -3,7 +3,7 @@ This project aims at developing a robot advisor to grow wealth with ETF investme
 
 ## Result and Discussion
 ### Portfolio Performance Summary
-*** *Updated with model trained and tested on Oct 28, 2021*  ***
+*** *Updated with model trained and tested on Oct 30, 2021*  ***
 
 Back-test Period: From 2015-01-02 to	2020-12-31
 
