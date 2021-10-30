@@ -129,4 +129,9 @@ dmypy.json
 .pyre/
 
 # Powerpoint
-.ppt/
+.ppt
+.pptx
+
+# Word
+.doc
+.docx
