@@ -3,36 +3,62 @@ This project aims at developing a robot advisor to grow wealth with ETF investme
 
 ## Result and Discussion
 ### Portfolio Performance Summary
+*** *Updated with model trained and tested on Oct 28, 2021*  ***
 
 Back-test Period: From 2015-01-02 to	2020-12-31
 
 &nbsp; | Details 
 --- | --- 
-**Annual return** | 15.162%
-**Cumulative returns** | 133.133%
-**Annual volatility** | 21.313%
-**Sharpe ratio** |	0.77
-**Alpha** |	0.02
-**Beta** |	1.05
+**Annual return** | 17.836%
+**Cumulative returns** | 167.534%
+**Annual volatility** | 21.585%
+**Sharpe ratio** |	0.87
+**Sortino ratio** |	1.21
+**Alpha** |	0.04
+**Beta** |	1.08
 
-In back-testing, the portfolio value grows 2.3 times in 6 years with annual return 15% and volatility 21%, which performed  slightly better than the benchmark index (SPY) but also riskier. The Sharpe ratio is 0.77 on average but it fluctuated from -2 to 4 during the back-test period. It performed the best in 2017 and 2018 and fluctuates in 2019. Though experiencing a large drop in 2020, it recovered faster than the benchmark and had the largest growth afterwards. The aims is to grow wealth  through continuous learning and rational decision-making so looking at the allocation along the time shows more about how it made decisions.
+In back-testing, the portfolio value grows 2.7 times in 6 years with annual return 18% and volatility 22%, which performed better than the benchmark index (SPY) but also riskier. The Sharpe ratio is 0.87 on average, which is smaller than 1, and fluctuated from -2 to 4 during the back-test period while the Sortino ratio is 1.21, which is more than 1, and means the downside risk-adjusted return is acceptable. It performed the best in 2019 and worst in 2018 and fluctuates in 2020. Though experiencing a large drop in 2020, it recovered faster than the benchmark and had the largest growth afterwards. The aims is to grow wealth through continuous learning and rational decision-making so looking at the allocation along the time shows more about how it made decisions.
 
 ![alt text][cumula_ret]
 ![alt text][pyfolio_tear_sheet_rolling]
 
+More details can be found in [Pyfolio generated tear sheet](https://github.com/kftam1994/Robo_Advisor/blob/main/images/pyfolio_tear_sheet.png)
+
 ### Portfolio's Allocation
-The model chose different composition of ETF after observing different portfolio performance to cater for the market condition.
-During the back-test period, XLK and XLB are the major ETF chosen and occupied a large proportion of allocation. The model chose XLK more during positive return and stable period and mix of XLK and XLB during fluctuating period. Before 2017, similar weights were assigned to XLK (brown line) and XLB (green line) but it changed to more weights to XLK during 2017 and 2018, which enables a larger growth in 2017 and most of months in 2018 until the drop in late 2018. In 2019, there were a mix of XLK and XLB while in 2020, XLK dominates again. The model may seek to capture the growth by XLK. It also tries to maintain a mix of XLK and XLB to avoid negative return though it seems not working well.
-Similar situation also happened for the proportion of others ETF compared to XLK and XLB (orange line). Sometimes other ETF were also chose though with a significantly smaller proportion. When the orange line is not close to 1.0, other ETF were chosen apart from XLK and XLB. It happened in 2016 and 2019. In 2016 and 2019, during the fluctuating period and negative return, other ETF were chosen for some times. The model may seek a flat performance during volatile period.
+The model chose different composition of ETF after observing different portfolio performance to cater for the market condition. During the back-test period, XLK and XLB are the major ETF chosen and occupied a large proportion of allocation.
+In 2016 and 2019, the model chose XLK most of the time. In 2015 and 2017, the model chose on average one fifth to one third of weights for XLB and the rest XLK. In 2018 and 2020, the weights for XLB and XLK were fluctuating and the weight for XLB rose to half of weights in Jan 2018 and drop to less than 5% in some months of 2020.
+But it is only an observation of how the model had performed. Therefore, Integrated Gradients is also performed to describe which feature the model was focusing when it made the decision.
 
 ![alt text][port_weights]
 
-![alt text][month_ret_vs_port_maj_weight]
+![alt text][roll_vol_vs_port_maj_weight]
 
-Further analysis is needed, such as integrated gradients, to interpret the model and understand which features lead to each decision and which factors the model focus on. More types of ETF or even other asset classes could be added to increase the variety of the portfolio.
+### Model Interpretation-Integrated Gradients
+Integrated Gradients is an axiomatic attribution method adopted to interpret the model and understand which features lead to each decision and which factors the model focus on. From a baseline input, usually all zero, it generates a linear interpolation between the baseline and the original input step-by-step, computes the gradients in the neural network and computing the numerical approximation for the integral of those gradients by Gauss-Legendre quadrature rule.
 
-### Portfolio Performance Details
-More details can be found in [Pyfolio generated tear sheet](https://github.com/kftam1994/Robo_Advisor/blob/main/images/pyfolio_tear_sheet.png)
+Apart from prices, the model made decision to choose XLK and XLB due to the economic condition and price momentum and volatility of the XLK and XLB.
+
+#### XLK:
+In 2015, the model focused on average true range, unemployment rate and monetary base. It also looked at relative strength indicator during mid 2015. In 2016, the only focused feature was the relative strength indicator. During 2017 and 2018, M2 money supply, monetary base and unemployment rate were the target features. In 2019 and afterwards, it returned to average true range and relative strength indicator.
+
+![alt text][XLK_overall]
+
+From the distribution of aggregated integrated gradients values for each feature along the 6-year time at window 32th day, high price, moving average of prices and average true range, and economic indicators including unemployment rate, job opening, industrial production, monetary base were the major features driving the decision for choosing XLK.
+
+![alt text][XLK_features_32]
+
+#### XLB:
+Similar to XLK, for 2015, the model also looked at average true range and relative strength indicator. The unemployment rate and monetary base were considered too. From 2016 to 2020, relative strength indicator and average true range sometimes were the main feature the model focused. It took 10-year treasury into consideration in 2018.
+
+A note is that the sign of integrated gradients values of relative strength indicator and average true range for XLK (negative on average) and that for XLB (positive on average) were reversed.
+
+![alt text][XLB_overall]
+
+From the distribution of aggregated integrated gradients values for each feature along the 6-year time at window 32th day, it is similar to XLK that high price, moving average of prices and average true range, and economic indicators including unemployment rate, job opening, industrial production, monetary base were the major features driving the decision for choosing XLB.
+
+![alt text][XLK_features_32]
+
+It may indicate that the model considered the long term growth signified by the economic indicators during stable and growth market condition and paid close attention to price volatility and momentum during volatile market. 2017 and 2018 were years of relatively higher GDP growth and Federal Funds Rate was rising. 2015 and after 2019 were also period of fluctuating stock market due to QE, trade war, Brexit and then CoVID-19 pandemic. In addition, the different of sign of integrated gradients values for XLK and XLB may explain the switches to XLB during uncertainties in market and XLK for benefiting from fastest growth in stable market.
 
 ## Methodology
 Referencing to two papers, A Deep Reinforcement Learning Framework for the Financial Portfolio Management Problem ([arXiv:1706.10059](https://arxiv.org/abs/1706.10059) and [Github](https://github.com/ZhengyaoJiang/PGPortfolio)) and Adversarial Deep Reinforcement Learning in Portfolio Management ([arXiv:1808.09940](https://arxiv.org/abs/1808.09940) and [Github](https://github.com/liangzp/Reinforcement-learning-in-portfolio-management-)), this project applies the following methodologies to manage a portfolio of ETF investment.
@@ -172,7 +198,11 @@ Z. Liang, H. Chen, J. Zhu, K. Jiang, and Y. Li, “Adversarial Deep Reinforcemen
 License is following Zheng's [Github](https://github.com/ZhengyaoJiang/PGPortfolio) as some codes are re-written based on his.
 
 [nn_structure]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/neural_network_structure.png "neural network structure"
-[month_ret_vs_port_maj_weight]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/month_ret_vs_port_maj_weight.png "monthly return vs portfolio major weights"
+[roll_vol_vs_port_maj_weight]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/roll_vol_vs_port_maj_weight.png "rolling volatility vs portfolio major weights"
 [port_weights]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/port_weights.png "portfolio weights"
 [cumula_ret]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/cumula_ret.png "portfolio cumulative return"
 [pyfolio_tear_sheet_rolling]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/pyfolio_tear_sheet_rolling.png "rolling volatility & sharpe"
+[XLK_overall]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/XLK._overall.png "XLK Integrated Gradients"
+[XLK_features_32]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/XLK_features_32.png "XLK Integrated Gradients aggregated"
+[XLB_overall]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/XLB_overall.png "XLB Integrated Gradients"
+[XLB_features_32]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/XLB_features_32.png "XLB Integrated Gradients aggregated"
