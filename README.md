@@ -43,9 +43,9 @@ In 2015, the model focused on average true range, unemployment rate and monetary
 
 ![alt text][XLK_overall]
 
-From the distribution of aggregated integrated gradients values for each feature along the 6-year time at window 32th day, high price, moving average of prices and average true range, and economic indicators including unemployment rate, job opening, industrial production, monetary base were the major features driving the decision for choosing XLK.
+From the distribution of aggregated integrated gradients values for each feature of the [previous day/1st day in the window of data](#note-about-focusing-on-analyzing-the-1st-day-in-the-window-of-data), high price, moving average of prices and average true range, and economic indicators including unemployment rate, job opening, industrial production, monetary base were the major features driving the decision for choosing XLK.
 
-![alt text][XLK_features_32]
+![alt text][XLK_features_1]
 
 #### XLB:
 Similar to XLK, for 2015, the model also looked at average true range and relative strength indicator. The unemployment rate and monetary base were considered too. From 2016 to 2020, relative strength indicator and average true range sometimes were the main feature the model focused. It took 10-year treasury into consideration in 2018.
@@ -54,11 +54,16 @@ A note is that the sign of integrated gradients values of relative strength indi
 
 ![alt text][XLB_overall]
 
-From the distribution of aggregated integrated gradients values for each feature along the 6-year time at window 32th day, it is similar to XLK that high price, moving average of prices and average true range, and economic indicators including unemployment rate, job opening, industrial production, monetary base were the major features driving the decision for choosing XLB.
+From the distribution of aggregated integrated gradients values for each feature, it is similar to XLK that high price, moving average of prices and average true range, and economic indicators including unemployment rate, job opening, industrial production, monetary base were the major features driving the decision for choosing XLB.
 
-![alt text][XLK_features_32]
+![alt text][XLK_features_1]
 
 It may indicate that the model considered the long term growth signified by the economic indicators during stable and growth market condition and paid close attention to price volatility and momentum during volatile market. 2017 and 2018 were years of relatively higher GDP growth and Federal Funds Rate was rising. 2015 and after 2019 were also period of fluctuating stock market due to QE, trade war, Brexit and then CoVID-19 pandemic. In addition, the different of sign of integrated gradients values for XLK and XLB may explain the switches to XLB during uncertainties in market and XLK for benefiting from fastest growth in stable market.
+
+#### Note about Focusing on Analyzing the 1st day in the Window of Data
+The reason for focusing on the 1st day only out of the whole window of 32-day data is that the aggregated Integrated Gradients values are the most significant for the 1st, 2nd and 3rd day in the window, which means the model placed more emphasis on the features in these days compared to that in other days. Although it does not mean data in other window days were not important, they were less significant when it comes to affecting the decision of the model. Therefore, the above interpretation is mainly on the first day of the whole window.
+
+![alt text][Integrated_Gradients_each_Window]
 
 ## Methodology
 Referencing to two papers, A Deep Reinforcement Learning Framework for the Financial Portfolio Management Problem ([arXiv:1706.10059](https://arxiv.org/abs/1706.10059) and [Github](https://github.com/ZhengyaoJiang/PGPortfolio)) and Adversarial Deep Reinforcement Learning in Portfolio Management ([arXiv:1808.09940](https://arxiv.org/abs/1808.09940) and [Github](https://github.com/liangzp/Reinforcement-learning-in-portfolio-management-)), this project applies the following methodologies to manage a portfolio of ETF investment.
@@ -202,7 +207,8 @@ License is following Zheng's [Github](https://github.com/ZhengyaoJiang/PGPortfol
 [port_weights]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/port_weights.png "portfolio weights"
 [cumula_ret]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/cumula_ret.png "portfolio cumulative return"
 [pyfolio_tear_sheet_rolling]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/pyfolio_tear_sheet_rolling.png "rolling volatility & sharpe"
-[XLK_overall]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/XLK._overall.png "XLK Integrated Gradients"
-[XLK_features_32]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/XLK_features_32.png "XLK Integrated Gradients aggregated"
+[XLK_overall]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/XLK_overall.png "XLK Integrated Gradients"
+[XLK_features_1]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/XLK_features_1.png "XLK Integrated Gradients aggregated"
 [XLB_overall]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/XLB_overall.png "XLB Integrated Gradients"
-[XLB_features_32]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/XLB_features_32.png "XLB Integrated Gradients aggregated"
+[XLB_features_1]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/XLB_features_1.png "XLB Integrated Gradients aggregated"
+[Integrated_Gradients_each_Window]: https://github.com/kftam1994/Robo_Advisor/blob/main/images/Integrated_Gradients_each_Window.png "Integrated Gradients each window"
