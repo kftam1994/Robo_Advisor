@@ -835,7 +835,7 @@ class PortfolioTrainer:
         Plot the integrated gradients calculated during back testing
 
         """
-        x_days = list(range(1, self.IG_output_all_frames_X[self._asset_symbol_names[0]][0].shape[1]+1)) #2
+        x_days = list(range(self.IG_output_all_frames_X[self._asset_symbol_names[0]][0].shape[1],0,-1))
         for each_symbol_name in self.IG_output_all_frames_X_keys:
             IG_output_all_frames_X_asset = self.IG_output_all_frames_X[each_symbol_name]
             IG_output_all_frames_last_w_asset = self.IG_output_all_frames_last_w[each_symbol_name]
