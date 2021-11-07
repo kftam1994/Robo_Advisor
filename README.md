@@ -34,7 +34,7 @@ But it is only an observation of how the model had performed. Therefore, Integra
 ![alt text][roll_vol_vs_port_maj_weight]
 
 ### Model Interpretation-Integrated Gradients
-Integrated Gradients is an axiomatic attribution method adopted to interpret the model and understand which features lead to each decision and which factors the model focus on. From a baseline input, usually all zero, it generates a linear interpolation between the baseline and the original input step-by-step, computes the gradients in the neural network and computing the numerical approximation for the integral of those gradients by Gauss-Legendre quadrature rule.
+Integrated Gradients is an axiomatic attribution method adopted to interpret the model and understand which features lead to each decision and which factors the model focus on. From a baseline input, usually all zero, it generates a linear interpolation between the baseline and the original input step-by-step, computes the gradients of the model output with respect to each input feature in the neural network and computes the numerical approximation for the integral of those gradients by Gauss-Legendre quadrature rule.
 
 Apart from prices, the model made decision to choose XLK and XLB due to the economic condition and price momentum and volatility of the XLK and XLB.
 
