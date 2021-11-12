@@ -90,7 +90,7 @@ Apart from High, Low, Close, Open prices history, macroeconomic indicators and t
 
 3.	Roll Train
 
-During backtesting, roll training is implemented after each new day of observation with a relatively small number of steps/epochs compared to full training
+During backtesting, roll training is implemented after each new year of observation with a relatively small number of steps/epochs compared to full training
 
 4.	Different network structure & Pytorch Implementation
 
